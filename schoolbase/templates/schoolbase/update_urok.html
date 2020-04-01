@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="display-5 text-center">Введите данные</h1>
+	<h5 class="display-6 text-center">{{ klass }} класс. {{ day }}, {{ urok }} урок</h5>
+	{% if error %}
+		<h4 class="display-5 text-center text-danger"><b>{{error}}</b></h4>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-md-6 mx-auto">
+			<form action="" method="post" class="post-form" id="urokForm" data-urok-url="{% url 'schoolbase:ajax_get_fio' %}" novalidate> {% csrf_token %}
+				{{form.as_p}}
+				<br>
+				<table>
+					<tbody>
+						<tr>
+							<td class="col-sm-12 align-middle">
+								<input type="submit" value="Изменить" name='save'>
+							</td>
+							<td class="col-sm-12 align-middle" scope="row">
+								<input type="submit" value="Удалить" name='delete'>
+							</td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var url = $("#urokForm").attr("data-urok-url");
+			var predmetId = $("#id_predmet").val();
+			var fioId = $("#id_fio").val();
+
+			$.ajax({
+				url: url,
+				data: {
+					'predmet': predmetId
+				},
+				success: function(data){
+					$('#id_fio').html(data);
+					$('#id_fio').val(fioId);
+				}
+			});
+
+		});
+
+		$("#id_predmet").change(function(){
+			var url = $("#urokForm").attr("data-urok-url");
+			var predmetId = $(this).val();
+
+			$.ajax({
+				url: url,
+				data: {
+					'predmet': predmetId
+				},
+				success: function(data){
+					$('#id_fio').html(data);
+				}
+			});
+		});
+	</script>
+{% endblock %}
+

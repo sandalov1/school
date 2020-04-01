@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="display-5 text-center">Введите данные</h1>
+	<h5 class="display-6 text-center">{{ klass }} класс. {{ day }}, {{ urok }} урок</h5>
+	{% if error %}
+		<h4 class="display-5 text-center text-danger"><b>{{error}}</b></h4>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-md-6 mx-auto">
+			<form action="" method="post" class="post-form" id="urokForm" data-urok-url="{% url 'schoolbase:ajax_get_fio' %}" novalidate> {% csrf_token %}
+				{{form.as_p}}
+				<br>
+
+				<div class="row align-middle">
+					<div class="col-md-4">
+						<p><input type="submit" value="Сохранить"></p>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#id_fio').html('<option value="">---------</option>');
+		});
+
+		$("#id_predmet").change(function(){
+			var url = $("#urokForm").attr("data-urok-url");
+			var predmetId = $(this).val();
+
+			$.ajax({
+				url: url,
+				data: {
+					'predmet': predmetId
+				},
+				success: function(data){
+					$('#id_fio').html(data);
+				}
+			});
+		});
+	</script>
+
+
+{% endblock %}
+

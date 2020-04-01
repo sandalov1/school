@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load school_extras %}
+
+{% block content %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Общее расписание</h1>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr class="table-danger">
+          <th scope="col" class=""></th>
+          {% for day in days %}
+            <th scope="col" class="col-md-2 text-center">{{ day }}</th>
+          {% endfor %}
+          <th scope="col" class=""></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for klass in klassy %}
+          {% for urok in uroki %}
+            <tr {% if forloop.parentloop.counter|divide:2 %}  class="table-primary" {% endif %}>
+              {% if forloop.counter == 1 %}
+                <td rowspan="{{uroki.count }}" class="align-middle">{{ klass }}</td>
+              {% endif %}
+
+              {% for day in days %}
+                {% selectnum predmety klass urok day as prdmt %}
+                <td class="{% if user.is_authenticated %} table-cell-url {% endif %} text-center" data-href="{% if prdmt %} {% url 'schoolbase:updateurok' pk=prdmt.pk %} {% else %} {% url 'schoolbase:createurok' day=day.pk urok=urok.pk klass=klass.pk %} {% endif %}">
+                  
+                  {% if prdmt %}
+                    <b>{{ prdmt.r_predmet }}</b> (каб. {{prdmt.kabinet}})
+                    <br>
+                    <p><em>{{ prdmt.prepodavatel }}</em></p>
+                  {% endif %}
+                </td>
+              {% endfor %}
+
+              {% if forloop.counter == 1 %}
+                <td rowspan="{{uroki.count }}" class="align-middle">{{ klass }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          <thead>
+        <tr class="table-danger">
+          <th scope="col" class=""></th>
+          {% for day in days %}
+            <th scope="col" class="col-md-2 text-center">{{ day }}</th>
+          {% endfor %}
+          <th scope="col" class=""></th>
+        </tr>
+      </thead>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
