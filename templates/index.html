@@ -6,15 +6,15 @@
     <h1 class="h2">Общее расписание</h1>
   </div>
 
-  <div class="table-responsive">
+  <div class="table-responsive-xl">
     <table class="table table-bordered table-sm">
       <thead>
         <tr class="table-danger">
-          <th scope="col" class=""></th>
+          <th style="width: 2%" class=""></th>
           {% for day in days %}
-            <th scope="col" class="col-md-2 text-center">{{ day }}</th>
+            <th style="width: 16%" class="text-center">{{ day }}</th>
           {% endfor %}
-          <th scope="col" class=""></th>
+          <th style="width: 2%" class=""></th>
         </tr>
       </thead>
       <tbody>
@@ -44,11 +44,11 @@
           {% endfor %}
           <thead>
         <tr class="table-danger">
-          <th scope="col" class=""></th>
+          <th class=""></th>
           {% for day in days %}
-            <th scope="col" class="col-md-2 text-center">{{ day }}</th>
+            <th class="text-center">{{ day }}</th>
           {% endfor %}
-          <th scope="col" class=""></th>
+          <th class=""></th>
         </tr>
       </thead>
         {% endfor %}
