@@ -62,24 +62,24 @@ WSGI_APPLICATION = 'school.wsgi.application'
 #    }
 #}
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'OPTIONS': {
-#            'read_default_file': '/etc/mysql/my.cnf',
-#        },
-#    }
-#}
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sandalov1$school',
-        'USER': 'sandalov1',
-        'PASSWORD': 'qwerty123',
-        'HOST': 'sandalov1.mysql.pythonanywhere-services.com',
-    }    
+        'OPTIONS': {
+            'read_default_file': '/etc/mysql/my.cnf',
+        },
+    }
 }
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'sandalov1$school',
+#        'USER': 'sandalov1',
+#        'PASSWORD': 'qwerty123',
+#        'HOST': 'sandalov1.mysql.pythonanywhere-services.com',
+#    }    
+#}
 
 
 # Password validation
