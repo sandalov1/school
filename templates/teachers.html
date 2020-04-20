@@ -3,22 +3,16 @@
 
 {% block content %}
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h1 class="h2">Общее расписание</h1>
-    {% if user.is_authenticated %}
-      <form action="{% url 'schoolbase:clearraspisane' %}" class="ml-auto">
-        <input type="submit" value='Очистить'>
-      </form>
-    {% endif %}
+    <h1 class="h2">Расписание учителей</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+          {% for field in form %}
+            {{ field }}
+          {% endfor %}
+      </div>
   </div>
 
-  {% if user.is_authenticated %}
-    <div>
-      <em>* для редактирование нажмите на ячейку расписания</em>
-    </div>
-  {% endif %}
-
   <div id='printpart'>
-    <div class="table-responsive-xl">
+   <div class="table-responsive-xl">
       <table class="table table-bordered table-sm">
         <thead>
           <tr class="table-danger">
@@ -32,21 +26,22 @@
         <tbody>
           {% for klass in klassy %}
             {% for urok in uroki %}
-              <tr {% if forloop.parentloop.counter|divide:2 %}  class="table-primary" {% endif %}>
+              <tr class="table-cell {% if forloop.parentloop.counter|divide:2 %} table-primary {% endif %}">
                 {% if forloop.counter == 1 %}
                   <td rowspan="{{uroki.count }}" class="align-middle">{{ klass }}</td>
                 {% endif %}
 
                 {% for day in days %}
-                  {% selectnum predmety klass urok day as prdmt %}
-                  <td class="table-cell {% if user.is_authenticated %} table-cell-url {% endif %} text-center" data-href="{% if prdmt %} {% url 'schoolbase:updateurok' pk=prdmt.pk %} {% else %} {% url 'schoolbase:createurok' day=day.pk urok=urok.pk klass=klass.pk %} {% endif %}">
-                    
-                    {% if prdmt %}
-                      <b>{{ prdmt.r_predmet }}</b> (каб. {{prdmt.kabinet}})
-                      <br>
-                      <p><em>{{ prdmt.prepodavatel }}</em></p>
-                    {% endif %}
-                  </td>
+                  {% if prepod %}
+                    {% selectnumprepod predmety klass urok day prepod as prdmt %}
+                    <td class="text-center">
+                      {% if prdmt %}
+                        <b>{{ prdmt.r_predmet }}</b> (каб. {{prdmt.kabinet}})
+                      {% endif %}
+                    </td>
+                  {% else %}
+                  <td class="text-center"></td>
+                  {% endif %}
                 {% endfor %}
 
                 {% if forloop.counter == 1 %}
@@ -69,7 +64,18 @@
     </div>
   </div>
 
-  <input type="button" value="Печать" onclick="PrintElem('#printpart', 'Общее расписание')">
+  <input type="button" value="Печать" onclick="PrintElem('#printpart', 'Расписание учителя: {{fio}}')">
   <br><br>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-{% endblock %}
+  <script>
+    $("#id_prepod").change(function(){
+      var url = {% url 'teacher' %}+$('#id_prepod').val();
+      document.location.href = url;
+      ttt = 0;
+
+    });
+  </script>
+
+{% endblock %} 
+

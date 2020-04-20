@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="display-5 text-center">Введите данные</h1>
+	<h5 class="display-6 text-center">Количество учебных часов в <b>{{ klass }}</b> классе</h5>
+	{% if error %}
+		<h4 class="display-5 text-center text-danger"><b>{{error}}</b></h4>
+	{% endif %}
+	<br>
+	<div class="row">
+		<div class="col-md-6 mx-auto">
+			<form action="" method="post" class="post-form" novalidate> {% csrf_token %}
+				{% for key, vol in forms.items|dictsort:"0.lower" %}
+					<b>{{key}}</b>
+					{{ vol.as_p }}
+					<br>	
+				{% endfor %}
+				<br>
+				<table>
+					<tbody>
+						<tr>
+							<td class="col-sm-12 align-middle">
+								<input type="submit" value="Изменить" name='save'>
+							</td>
+							<td class="col-sm-12 align-middle" scope="row">
+								<input type="submit" value="Удалить" name='delete'>
+							</td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+	<br>
+{% endblock %}
+

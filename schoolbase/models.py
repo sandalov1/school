@@ -115,3 +115,18 @@ class Raspisanie(models.Model):
         return str(self.day_nedeli) + ' / Урок ' + str(self.urok) + ' - ' + str(self.klass)
 
 
+class Tarif(models.Model):
+    id_tarif = models.AutoField(db_column='id_Tarif', primary_key=True)
+    klass = models.ForeignKey(Klass, verbose_name='Класс', on_delete=models.CASCADE, db_column='Klass')
+    r_predmet = models.ForeignKey(Predmet, verbose_name='Предмет', on_delete=models.CASCADE, db_column='R_Predmet')
+    col_urokov = models.IntegerField(verbose_name='Количество уроков в неделю', db_column='Col_Urokov', default=5)
+
+    class Meta:
+        managed = False
+        db_table = 'tarif'
+        ordering = ['klass', 'r_predmet']
+        verbose_name='Тарификация'
+        verbose_name_plural='Тарификация'
+
+    def __str__(self):
+        return str(self.klass) + ' / ' + str(self.r_predmet) + ' - ' + str(self.col_urokov)

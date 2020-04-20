@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load school_extras %}
+
+{% block content %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Расписание учеников</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+          {% for field in form %}
+            {{ field }}
+          {% endfor %}
+      </div>
+  </div>
+
+
+  <div id='printpart'>
+   <div class="table-responsive-xl">
+      <table class="table table-bordered table-sm">
+        <thead>
+          <tr class="table-danger">
+            <th style="width: 2%" class=""></th>
+            {% for day in days %}
+              <th style="width: 16%" class="text-center">{{ day }}</th>
+            {% endfor %}
+            <th style="width: 2%" class=""></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for urok in uroki %}
+            <tr class="table-cell">
+                <td class="align-middle text-center">{{ forloop.counter }}</td>
+
+              {% for day in days %}
+                {% if klass %}
+                  {% selectnumklass predmety klass urok day as prdmt %}
+                  <td class="text-center">
+                    {% if prdmt %}
+                      <b>{{ prdmt.r_predmet }}</b> (каб. {{prdmt.kabinet}})
+                      <br>
+                      <p><em>{{ prdmt.prepodavatel }}</em></p>
+                    {% endif %}
+                  </td>
+                {% else %}
+                <td></td>
+                {% endif %}
+              {% endfor %}
+
+              <td class="align-middle text-center">{{ forloop.counter }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <input type="button" value="Печать" onclick="PrintElem('#printpart', 'Расписание {{name}} класса')">
+  <br><br>
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <script>
+    $("#id_klass").change(function(){
+      var url = {% url 'student' %}+$('#id_klass').val();
+      document.location.href = url;
+      ttt = 0;
+
+    });
+  </script>
+{% endblock %} 
+

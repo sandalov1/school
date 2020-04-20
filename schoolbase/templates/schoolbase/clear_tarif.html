@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="display-5 text-center">Удаление тарификации</h1>
+
+
+	<div class="row">
+		<div class="col-md-6 mx-auto">
+			<form action="" method="post" class="post-form" novalidate> {% csrf_token %}
+				<div class="row align-middle">
+					<div class="mx-auto">
+						<input class="" type="submit" value="Отменить" name='cancel'>
+						<input class="" type="submit" value="Удалить">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}
+

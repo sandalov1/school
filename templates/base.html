@@ -1,3 +1,7 @@
+{% url 'home' as home_url %}
+{% url 'tarif' as tarif_url %}
+
+
 <!doctype html>
 <html lang="ru">
 	<head>
@@ -30,9 +34,12 @@
 				margin-bottom: 0;
 			}
 
+			.table-cell{
+				height: 2rem;
+			}
+
 			.table-cell-url{
 				cursor: pointer;
-				height: 2rem;
 				transition: 0.2s;
 				-webkit-transition: 0.2s;
 			}
@@ -81,23 +88,33 @@
 					<div class="sidebar-sticky">
 				        <ul class="nav flex-column">
 							<li class="nav-item">
-								<a class="nav-link active" href="{% url 'home' %}">
+								<a class="nav-link {% if request.path == home_url %} active {% endif %}" href="{% url 'home' %}">
 									<span data-feather="home"></span>
 									Общее расписание <span class="sr-only">(current)</span>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="#">
+								<a class="nav-link {% if 'teacher' in request.path %} active {% endif %}" href="{% url 'teacher' %}">
 									<span data-feather="file"></span>
 									Расписание учителей
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="#">
+								<a class="nav-link {% if 'student' in request.path %} active {% endif %}" href="{% url 'student' %}">
 									<span data-feather="shopping-cart"></span>
 									Расписание учеников
 								</a>
 							</li>
+							{% if user.is_authenticated %}
+								{% if user.username == 'admin' or user.username == 'operator' %}
+									<li class="nav-item">
+										<a class="nav-link {% if request.path == tarif_url %} active {% endif %}" href="{% url 'tarif' %}">
+											<span data-feather="shopping-cart"></span>
+											Тарификация
+										</a>
+									</li>
+								{% endif %}
+							{% endif %}
 						</ul>
 					</div>
 				</nav>
@@ -125,5 +142,40 @@
 			});
 		</script>
 
+		<script type="text/javascript">
+			function PrintElem(elem, title){
+				Popup($(elem).html(), title);
+			}
+			
+			function Popup(data, title){
+				var printstile = '<style>';
+				printstile += '.bd-placeholder-img {font-size: 1rem;text-anchor: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}';
+				printstile += 'main{font-size: 0.75rem;}';
+				printstile += 'p{margin-bottom: 0;}';
+				printstile += '.table-cell{height: 2rem;}';
+				printstile += 'table {border-collapse: collapse;}';
+				printstile += 'table, th, td {border: 1px solid black; text-align: center;font-size: 13px !important;}';
+				printstile += '.print-head {text-align: left;}';
+				printstile += '</style>';
+				data = data.replace(new RegExp('<p>','g'),'');
+				data = data.replace(new RegExp('</p>','g'),'');
+
+
+
+				var mywindow = window.open('', 'schedule', 'height=400,width=600');
+				mywindow.document.write('<html><head><title>Печатная форма</title>');
+				mywindow.document.write(printstile);
+				mywindow.document.write('</head><body >');
+				mywindow.document.write(title);
+				title
+				mywindow.document.write(data);
+				mywindow.document.write('</body></html>');
+				mywindow.document.close(); // necessary for IE >= 10
+				mywindow.focus(); // necessary for IE >= 10
+				mywindow.print();
+				mywindow.close();
+				return true;
+			}
+		</script>
 	</body>
 </html>

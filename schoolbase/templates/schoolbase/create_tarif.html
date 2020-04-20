@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="display-5 text-center">Введите данные</h1>
+	<h5 class="display-6 text-center">Количество учебных часов в {{ klass }} классе по предмету {{ predmet }}.</h5>
+	{% if error %}
+		<h4 class="display-5 text-center text-danger"><b>{{error}}</b></h4>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-md-6 mx-auto">
+			<form action="" method="post" class="post-form" novalidate> {% csrf_token %}
+				{{form.as_p}}
+				<br>
+
+				<div class="row align-middle">
+					<div class="col-md-4">
+						<p><input type="submit" value="Сохранить"></p>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}
+

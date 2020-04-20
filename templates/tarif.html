@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load school_extras %}
+
+{% block content %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Тарификация</h1>
+    {% if user.is_authenticated %}
+      <form action="{% url 'schoolbase:cleartarif' %}" class="ml-auto">
+        <input type="submit" value='Очистить'>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if user.is_authenticated %}
+    <div>
+      <em>* для редактирование нажмите на ячейку тарификации, на название предмета или класс</em>
+    </div>
+  {% endif %}
+
+  <div id='printpart'>
+    <div class="table-responsive-xl">
+      <table class="table table-bordered table-sm">
+        <thead>
+          <tr class="table-danger">
+            <th style="width: 20%" class="text-center">Предмет</th>
+            {% for klass in klassy %}
+              <th style="width: {{persent}}%" class="table-cell-url text-center" data-href="{% url 'schoolbase:updateklasstarif' pk=klass.pk %}">{{ klass }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for predmet in predmets %}
+            <tr>
+              <th class="table-cell-url print-head" data-href="{% url 'schoolbase:updatepredmettarif' pk=predmet.pk %}">
+                {{ predmet }}
+              </th>
+              {% for klass in klassy %}
+                {% selectnumtarif predmet klass as prdmt %}
+                  <td class="table-cell-url text-center" data-href="{% if prdmt %} {% url 'schoolbase:updatetarif' pk=prdmt.pk %} {% else %} {% url 'schoolbase:createtarif' predmet=predmet.pk klass=klass.pk %} {% endif %}">
+                    {% if prdmt %}
+                      {{ prdmt.col_urokov }}
+                    {% endif %}
+                  </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <input type="button" value="Печать" onclick="PrintElem('#printpart', 'Тарификация')">
+  <br><br>
+{% endblock %}
